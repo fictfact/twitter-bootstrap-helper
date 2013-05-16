@@ -36,20 +36,7 @@ namespace twitterbootstraphelper.tests
 
             List<BrowsePage> menu = tbs.GetBrowseMenu(9, 10, 1, 2, "active");
 
-            Assert.AreEqual(testMenu.Count, menu.Count);
-
-            for (int i = 0; i < testMenu.Count; i++)
-            {
-                BrowsePage testBP = testMenu[i];
-
-                BrowsePage menuBP = menu[i];
-
-                Assert.AreEqual(testBP.label, menuBP.label);
-
-                Assert.AreEqual(testBP.pageNum, menuBP.pageNum);
-
-                Assert.AreEqual(testBP.GetCSSClasses, menuBP.GetCSSClasses);
-            }
+            RunAssertions(testMenu, menu);
 
 		}
 
@@ -87,13 +74,19 @@ namespace twitterbootstraphelper.tests
 
             List<BrowsePage> menu = tbs.GetBrowseMenu(6, 2, 2, 1, "active");
 
-            Assert.AreEqual(testMenu.Count, menu.Count);
+            RunAssertions(testMenu, menu);
 
-            for (int i = 0; i < testMenu.Count; i++)
+        }
+
+        public void RunAssertions(List<BrowsePage> leftList, List<BrowsePage> rightList)
+        {
+            Assert.AreEqual(leftList.Count, rightList.Count);
+
+            for (int i = 0; i < leftList.Count; i++)
             {
-                BrowsePage testBP2 = testMenu[i];
+                BrowsePage testBP2 = leftList[i];
 
-                BrowsePage menuBP = menu[i];
+                BrowsePage menuBP = rightList[i];
 
                 Assert.AreEqual(testBP2.label, menuBP.label);
 
@@ -101,7 +94,6 @@ namespace twitterbootstraphelper.tests
 
                 Assert.AreEqual(testBP2.GetCSSClasses, menuBP.GetCSSClasses);
             }
-
         }
 	}
 }

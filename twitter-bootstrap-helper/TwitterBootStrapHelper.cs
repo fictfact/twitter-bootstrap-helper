@@ -1,5 +1,7 @@
 using System;
 using System.Collections.Generic;
+using System.Collections.Specialized;
+using System.Linq;
 
 using twitterbootstraphelper.classes;
 
@@ -11,81 +13,105 @@ namespace twitterbootstraphelper
 		{
 		}
 
-		public List<BrowsePage> GetBrowseMenu (int itemSize, int menuSize, int pageSize, int currentPage = 1, string cssActive="")
+		public List<BrowsePage> GetBrowseMenu (int itemSize, int menuSize, int currentPage = 1, string cssActive="")
 		{
 			List<BrowsePage> browseList = new List<BrowsePage> ();
 
-			int numberOfPages = (int)(itemSize / pageSize);
+			browseList = this.GetMenuWedge (itemSize, menuSize, currentPage, cssActive);
 
-            int counter = 1;
+			//let's determine if we need "next" or "prev" buttons
+			var first = browseList.First ();
 
-			if (numberOfPages <= menuSize) {
-                
-				for (int x = 1; x <= numberOfPages; x++) {
+			int pageNum = first.pageNum;
 
-					BrowsePage bp = new BrowsePage ();
+			if (pageNum > 1) {
 
-					bp.pageNum = x;
+				BrowsePage bp = new BrowsePage ();
 
-					bp.label = x.ToString ();
+				bp.pageNum = pageNum - 1;
 
-					if ((currentPage == x) && (cssActive != "")) {
-						bp.cssClass.Add (cssActive);
-					}
+				bp.label = "Prev";
 
-					browseList.Add (bp);
+				browseList [0] = bp;
+			}
 
-					counter++;
-				}
+			var last = browseList [browseList.Count - 1];
 
-				if ((itemSize % pageSize) > 0)
-            	{
-                	BrowsePage bp = new BrowsePage();
+			pageNum = last.pageNum;
 
-                	bp.pageNum = counter;
+			if (pageNum < itemSize) {
 
-					bp.label = counter.ToString();
+				BrowsePage bp = new BrowsePage ();
 
-                	browseList.Add(bp);
-            	}
+				bp.pageNum = pageNum + 1;
 
-			} else {
+				bp.label = "Next";
 
-                if (currentPage < menuSize)
-                {
-                    for (int i = 1; i < menuSize + 1; i++)
-                    {
-                        BrowsePage bp = new BrowsePage();
-
-                        bp.pageNum = i;
-
-                        bp.label = i.ToString();
-
-                        if ((currentPage == i) && (cssActive != ""))
-                        {
-                            bp.cssClass.Add(cssActive);
-                        }
-
-                        browseList.Add(bp);
-
-                        counter++;
-                    }
-
-                    if (counter <= menuSize + 1)
-                    {
-                        BrowsePage bp = new BrowsePage();
-
-                        bp.pageNum = counter;
-
-                        bp.label = "Next";
-
-                        browseList.Add(bp);
-                    }
-                } //end if (currentPage < pageSize)
+				browseList.Add(bp);
 
 			}
 
 			return browseList;
+		}
+
+		public List<BrowsePage> GetMenuWedge (int itemSize, int menuSize, int currentPage, string cssActive="")
+		{
+			List<BrowsePage> browseList = new List<BrowsePage> ();
+
+			for (int i=1; i<itemSize+1; i++) {
+
+				BrowsePage bp = new BrowsePage ();
+
+				bp.pageNum = i;
+
+				bp.label = i.ToString ();
+
+				if ((currentPage == i) && (cssActive != "")) {
+					bp.cssClass.Add (cssActive);
+				}
+
+				browseList.Add (bp);
+			}
+
+			if (itemSize <= menuSize) {
+				return browseList;
+			}
+
+			//need to split into wedges based on menuSize
+			int numberOfWedges = (int)itemSize / menuSize;
+
+			List<List<BrowsePage>> wedges = new List<List<BrowsePage>>();
+
+			int pointer = 0;
+
+			int wedgeLocation = 0;
+
+			bool foundWedge = false;
+
+			for (int i = 0; i<numberOfWedges; i++) {
+
+				wedges.Add(new List<BrowsePage>());
+
+				int pointerStart = pointer;
+
+				while(pointer < (pointerStart + menuSize))
+				{
+					wedges[i].Add(browseList[pointer]);
+
+					if(browseList[pointer].pageNum == currentPage)
+					{
+						wedgeLocation = i;
+						foundWedge = true;
+					}
+
+					pointer++;
+				}
+
+				if(foundWedge)
+					break;
+			}
+
+			return wedges[wedgeLocation];
 		}
 	}
 }

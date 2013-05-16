@@ -11,6 +11,35 @@ namespace twitterbootstraphelper.tests
 	public class TestTwitterBootStrapHelper
 	{
 		[Test()]
+		public void TestGetMenuWedge ()
+		{
+			TwitterBootStrapHelper tbs = new TwitterBootStrapHelper ();
+
+			List<BrowsePage> menu = tbs.GetMenuWedge (6, 3, 5, "active");
+
+			List<BrowsePage> testMenu = new List<BrowsePage> ();
+
+			//i want a list that has the following 4,5(active),6)
+			for (int i = 4; i<7; i++) {
+
+				BrowsePage bp = new BrowsePage();
+
+                bp.label = i.ToString();
+
+                bp.pageNum = i;
+
+                if (i == 5)
+                    bp.cssClass.Add("active");
+
+                testMenu.Add(bp);
+			}
+
+			Assert.AreEqual(menu.Count, 3);
+
+			RunAssertions(testMenu, menu);
+		}
+
+		[Test()]
 		public void TestSimpleMenu ()
 		{
 			TwitterBootStrapHelper tbs = new TwitterBootStrapHelper();
@@ -34,7 +63,7 @@ namespace twitterbootstraphelper.tests
                 testMenu.Add(bp);
             }
 
-            List<BrowsePage> menu = tbs.GetBrowseMenu(9, 10, 1, 2, "active");
+            List<BrowsePage> menu = tbs.GetBrowseMenu(9, 10, 2, "active");
 
             RunAssertions(testMenu, menu);
 
@@ -72,7 +101,7 @@ namespace twitterbootstraphelper.tests
 
             testMenu.Add(testBP);
 
-            List<BrowsePage> menu = tbs.GetBrowseMenu(6, 2, 2, 1, "active");
+            List<BrowsePage> menu = tbs.GetBrowseMenu(6, 2, 1, "active");
 
             RunAssertions(testMenu, menu);
 

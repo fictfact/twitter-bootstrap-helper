@@ -17,10 +17,10 @@ namespace twitterbootstraphelper
 
 			int numberOfPages = (int)(itemSize / pageSize);
 
+            int counter = 1;
+
 			if (numberOfPages <= menuSize) {
-
-				int counter = 1;
-
+                
 				for (int x = 1; x <= numberOfPages; x++) {
 
 					BrowsePage bp = new BrowsePage ();
@@ -50,6 +50,38 @@ namespace twitterbootstraphelper
             	}
 
 			} else {
+
+                if (currentPage < menuSize)
+                {
+                    for (int i = 1; i < menuSize + 1; i++)
+                    {
+                        BrowsePage bp = new BrowsePage();
+
+                        bp.pageNum = i;
+
+                        bp.label = i.ToString();
+
+                        if ((currentPage == i) && (cssActive != ""))
+                        {
+                            bp.cssClass.Add(cssActive);
+                        }
+
+                        browseList.Add(bp);
+
+                        counter++;
+                    }
+
+                    if (counter <= menuSize + 1)
+                    {
+                        BrowsePage bp = new BrowsePage();
+
+                        bp.pageNum = counter;
+
+                        bp.label = "Next";
+
+                        browseList.Add(bp);
+                    }
+                } //end if (currentPage < pageSize)
 
 			}
 

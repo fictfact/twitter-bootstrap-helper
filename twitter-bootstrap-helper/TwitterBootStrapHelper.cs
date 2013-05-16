@@ -30,7 +30,7 @@ namespace twitterbootstraphelper
 					bp.label = x.ToString ();
 
 					if ((currentPage == x) && (cssActive != "")) {
-						bp.cssClass.Add ("pageActive");
+						bp.cssClass.Add (cssActive);
 					}
 
 					browseList.Add (bp);
@@ -38,7 +38,7 @@ namespace twitterbootstraphelper
 					counter++;
 				}
 
-				if ((itemSize % 100) > 0)
+				if ((itemSize % pageSize) > 0)
             	{
                 	BrowsePage bp = new BrowsePage();
 

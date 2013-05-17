@@ -16,12 +16,11 @@ namespace twitterbootstraphelper.tests
 		{
 			TwitterBootStrapHelper tbs = new TwitterBootStrapHelper ();
 
-			List<BrowsePage> menu = tbs.GetMenuWedge (6, 3, 5, "active");
+			List<BrowsePage> menu = tbs.GetMenuWedge (6, 100, 5, "active");
 
 			List<BrowsePage> testMenu = new List<BrowsePage> ();
 
-			//i want a list that has the following 4,5(active),6)
-			for (int i = 4; i<7; i++) {
+			for (int i = 1; i<7; i++) {
 
 				BrowsePage bp = new BrowsePage();
 
@@ -35,7 +34,7 @@ namespace twitterbootstraphelper.tests
                 testMenu.Add(bp);
 			}
 
-			Assert.AreEqual(menu.Count, 3);
+			Assert.AreEqual(menu.Count, 6);
 
 			RunAssertions(testMenu, menu);
 		}
@@ -64,7 +63,7 @@ namespace twitterbootstraphelper.tests
                 testMenu.Add(bp);
             }
 
-            List<BrowsePage> menu = tbs.GetBrowseMenu(9, 10, 2, "active");
+            List<BrowsePage> menu = tbs.GetBrowseMenu(9, 100, 2, "active");
 
             RunAssertions(testMenu, menu);
 
@@ -80,7 +79,7 @@ namespace twitterbootstraphelper.tests
 
             int pageIndex = 1;
 
-            for (int i = 1; i < 3; i++)
+            for (int i = 1; i < 7; i++)
             {
                 BrowsePage bp = new BrowsePage();
 
@@ -94,15 +93,7 @@ namespace twitterbootstraphelper.tests
                 testMenu.Add(bp);
             }
 
-            BrowsePage testBP = new BrowsePage();
-
-            testBP.label = "Next";
-
-            testBP.pageNum = 3;
-
-            testMenu.Add(testBP);
-
-            List<BrowsePage> menu = tbs.GetBrowseMenu(6, 2, 1, "active");
+            List<BrowsePage> menu = tbs.GetBrowseMenu(6, 100, 1, "active");
 
             RunAssertions(testMenu, menu);
 
@@ -113,31 +104,29 @@ namespace twitterbootstraphelper.tests
         {
             TwitterBootStrapHelper tbs = new TwitterBootStrapHelper();
 
-            List<BrowsePage> menu = tbs.GetBrowseMenu(1316, 5, 1, "active");
+            //this menu should return a list with 14 items, last item should be a pageNum of 14 and label of 14
+			List<BrowsePage> menu = tbs.GetBrowseMenu(1316, 100, 1, "active");
 
-            //should return a list with 6 items, last item should be pageNum of 6 and Label of "Next"
-            Assert.AreEqual(menu.Count, 6);
+			Assert.AreEqual(menu.Count, 14);
 
-            var last = menu[menu.Count - 1];
+			List<BrowsePage> testMenu = new List<BrowsePage>();
 
-            Assert.AreEqual(last.pageNum, 6);
+			for (int i = 1; i < 15; i++)
+            {
+                BrowsePage bp = new BrowsePage();
 
-            Assert.AreEqual(last.label, "Next");
+                bp.label = i.ToString();
 
-            menu = tbs.GetBrowseMenu(1316, 5, 6, "active");
+                bp.pageNum = i;
 
-            //should return a list with 7 items, last item should be pageNum of 11 and Label of "Next" and first should be 6 and "Prev"
-            Assert.AreEqual(menu.Count, 7);
+                if (i == 1)
+                    bp.cssClass.Add("active");
 
-            last = menu[menu.Count - 1];
+                testMenu.Add(bp);
+            }
 
-            Assert.AreEqual(last.pageNum, 11);
+			RunAssertions(testMenu, menu);
 
-            Assert.AreEqual(last.label, "Next");
-
-            var first = menu.First();
-
-            Assert.AreEqual(first.pageNum, 5);
         }
 
         public void RunAssertions(List<BrowsePage> leftList, List<BrowsePage> rightList)

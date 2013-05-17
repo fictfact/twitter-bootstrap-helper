@@ -13,14 +13,14 @@ namespace twitterbootstraphelper
 		{
 		}
 
-		public List<BrowsePage> GetBrowseMenu (int itemSize, int menuSize, int currentPage = 1, string cssActive="")
+		public List<BrowsePage> GetBrowseMenu (int itemSize, int pageSize = 100, int currentPage = 1, string cssActive="")
 		{
 			List<BrowsePage> browseList = new List<BrowsePage> ();
 
-			browseList = this.GetMenuWedge (itemSize, menuSize, currentPage, cssActive);
+			browseList = this.GetMenuWedge (itemSize, pageSize, currentPage, cssActive);
 
 			//let's determine if we need "next" or "prev" buttons
-			var first = browseList.First ();
+			/*var first = browseList.First ();
 
 			int pageNum = first.pageNum;
 
@@ -49,16 +49,31 @@ namespace twitterbootstraphelper
 
 				browseList.Add(bp);
 
-			}
+			}*/
 
 			return browseList;
 		}
 
-		public List<BrowsePage> GetMenuWedge (int itemSize, int menuSize, int currentPage, string cssActive="")
+		public List<BrowsePage> GetMenuWedge (int itemSize, int pageSize, int currentPage, string cssActive="")
 		{
 			List<BrowsePage> browseList = new List<BrowsePage> ();
 
-			for (int i=1; i<itemSize+1; i++) {
+			int numberOfWedges = 0;
+
+			if (itemSize < pageSize) {
+				numberOfWedges = itemSize;
+			} else {
+
+				numberOfWedges = (int)itemSize / pageSize;
+
+				int leftOver = itemSize % pageSize;
+
+				if(leftOver > 0)
+					numberOfWedges++;
+
+			}
+
+			for (int i=1; i<numberOfWedges+1; i++) {
 
 				BrowsePage bp = new BrowsePage ();
 
@@ -73,12 +88,22 @@ namespace twitterbootstraphelper
 				browseList.Add (bp);
 			}
 
-			if (itemSize <= menuSize) {
+			/*if (itemSize <= menuSize) {
 				return browseList;
 			}
 
 			//need to split into wedges based on menuSize
-			int numberOfWedges = (int)itemSize / menuSize;
+			int numberOfWedges = 0;//(int)itemSize / menuSize;
+
+			int topValue = 0;
+
+			if (pageSize > menuSize) {
+				numberOfWedges = 1;
+				topValue = itemSize;
+			} else {
+				numberOfWedges = (int)itemSize / menuSize;
+				topValue = menuSize;
+			}
 
 			List<List<BrowsePage>> wedges = new List<List<BrowsePage>>();
 
@@ -94,7 +119,7 @@ namespace twitterbootstraphelper
 
 				int pointerStart = pointer;
 
-				while(pointer < (pointerStart + menuSize))
+				while(pointer < (pointerStart + topValue))
 				{
 					wedges[i].Add(browseList[pointer]);
 
@@ -109,9 +134,9 @@ namespace twitterbootstraphelper
 
 				if(foundWedge)
 					break;
-			}
+			}*/
 
-			return wedges[wedgeLocation];
+			return browseList;
 		}
 	}
 }

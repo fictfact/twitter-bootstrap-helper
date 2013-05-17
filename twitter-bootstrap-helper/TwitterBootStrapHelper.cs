@@ -32,7 +32,7 @@ namespace twitterbootstraphelper
 
 				bp.label = "Prev";
 
-				browseList [0] = bp;
+                browseList.Insert(0, bp);
 			}
 
 			var last = browseList [browseList.Count - 1];

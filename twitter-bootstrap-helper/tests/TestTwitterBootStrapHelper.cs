@@ -1,4 +1,5 @@
 using System;
+using System.Linq;
 using System.Collections.Generic;
 using NUnit.Framework;
 
@@ -105,6 +106,38 @@ namespace twitterbootstraphelper.tests
 
             RunAssertions(testMenu, menu);
 
+        }
+
+        [Test()]
+        public void TestRealWorldTest()
+        {
+            TwitterBootStrapHelper tbs = new TwitterBootStrapHelper();
+
+            List<BrowsePage> menu = tbs.GetBrowseMenu(1316, 5, 1, "active");
+
+            //should return a list with 6 items, last item should be pageNum of 6 and Label of "Next"
+            Assert.AreEqual(menu.Count, 6);
+
+            var last = menu[menu.Count - 1];
+
+            Assert.AreEqual(last.pageNum, 6);
+
+            Assert.AreEqual(last.label, "Next");
+
+            menu = tbs.GetBrowseMenu(1316, 5, 6, "active");
+
+            //should return a list with 7 items, last item should be pageNum of 11 and Label of "Next" and first should be 6 and "Prev"
+            Assert.AreEqual(menu.Count, 7);
+
+            last = menu[menu.Count - 1];
+
+            Assert.AreEqual(last.pageNum, 11);
+
+            Assert.AreEqual(last.label, "Next");
+
+            var first = menu.First();
+
+            Assert.AreEqual(first.pageNum, 5);
         }
 
         public void RunAssertions(List<BrowsePage> leftList, List<BrowsePage> rightList)
